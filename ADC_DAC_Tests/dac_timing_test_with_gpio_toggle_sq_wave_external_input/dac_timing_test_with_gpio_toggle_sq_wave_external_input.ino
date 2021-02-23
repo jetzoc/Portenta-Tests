@@ -10,7 +10,7 @@
  *  D0 = digital output for timing purposes 
  *  D1 = digital input for Analog signal coming from the DAC (scope ch. 1)
  * 
- *  For schematic and notes see: https://github.com/jetzoc/Portenta_Tests.git
+ *  For schematic and notes see: https://github.com/jetzoc/Portenta-Tests.git
  *  
  *  February 22, 2021
  */

@@ -13,7 +13,7 @@
  *  Don't forget to turn the dial on the POT to see results!!
  *     - Analog number moves from 0 to 65535
  *  
- *  For schematic and notes see: https://github.com/jetzoc/Portenta_Tests.git
+ *  For schematic and notes see: https://github.com/jetzoc/Portenta-Tests.git
  *  
  *  February 22, 2021
  */
