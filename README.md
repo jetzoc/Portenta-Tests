@@ -1,6 +1,6 @@
 # Portenta Tests
 
-A collection of sketches made to test out features of the recent Arduino Portenta H7 board. Brief documentation is included with each ``.ino`` files. 
+A collection of sketches made to test out features of the recent Arduino Portenta H7 board. Brief documentation is included within each ``.ino`` file. Oscilloscope captures and schematics are included in folders labeled *docs* for each project. 
 
 Main purpose of the repository is to serve as preliminary research to advance the PONIRS project.
 
@@ -9,7 +9,7 @@ Feel free to compile, upload and reproduce results for further verification.
 Suggestions are welcome. 
 
 ## To execute 
-Open ``.ino`` files with the ``Arduino IDE `` (v1.8.13 was used as of this writing). 
+Open ``.ino`` files with the ``Arduino IDE`` (v1.8.13 was used as of this writing). 
 1. Install the **Arduino mbed-enabled Boards** library
    - Tools -> Board -> Boards Manager 
    - Search *mbed* or *Portenta H7*
@@ -18,7 +18,7 @@ Open ``.ino`` files with the ``Arduino IDE `` (v1.8.13 was used as of this writi
 3. Select COM port
    - Tools -> Port -> COM#
 4. Click the checkmark to *Compile* or *Verify*
-5. Click on the arrow pointing left to *Upload* or *Flash* firmware to board. 
+5. Click on the arrow pointing right to *Upload* or *Flash* firmware to board. 
 
 ## Troubleshooting
 Portenta does not recieve firmware.
