@@ -21,7 +21,7 @@
 
 void setup() {
     /* ADC @ 16-bits */
-    analogReadResolution(12);  // change to 10 or 12 for the other 
+    analogReadResolution(16);  // change to 10 or 12 for the other 
                                // bit resolutions respectively
 
     /* Set up the ADC input pin */ 
