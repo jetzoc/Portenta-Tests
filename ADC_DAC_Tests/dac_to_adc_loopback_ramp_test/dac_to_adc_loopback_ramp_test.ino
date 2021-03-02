@@ -20,7 +20,7 @@
  *
  *  For schematic and notes see: https://github.com/jetzoc/Portenta-Tests.git
  *  
- *  February 22, 2021
+ *  March 1, 2021
  */
 
 #include <stdlib.h>
