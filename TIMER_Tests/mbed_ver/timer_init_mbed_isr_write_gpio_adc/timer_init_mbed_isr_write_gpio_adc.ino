@@ -30,6 +30,8 @@ using namespace mbed;
 #define BYTE_SIZE 8 
 int eeg_bus[BYTE_SIZE] = { 9, 8, 7, 6, 5, 4, 3, 2};
 
+// Create array for holding information to send to a multiplexer
+// and a channel tracker for the 64 different writes to pin array
 #define NUM_OF_CH 64         // sampling 64 channels
 int mux_bits[NUM_OF_CH];        
 int current_ch = 0; 
@@ -65,18 +67,25 @@ void loop() {
 
 /* User-defined functions */ 
 /* Timer ISR */ 
-// void timerISR(BusOut *bus_out, int *bits )
-// {
+ void timerISR(void )
+ {
+  // Cycles for number of bits to send (i.e. 8 bits)
+  // Write to one byte to a GPIO pin and switch to next one in the bus
+  // e.g. Bit 0 is written to pin 0 in the bus (array of pins) and so on...
+  for (int bit_num = 0; bit_num < BYTE_SIZE; bit_num++) 
+  {
+    digitalWrite(eeg_bus[bit_num], bitRead(mux_bits[current_ch], bit_num));
+  }
 
-
-//   // current_ch++;
+  // Increment for next time
+  current_ch++;
   
-//   // //Reset current_ch only when last channel is read
-//   // if (current_ch == (NUM_OF_CH - 1))   // if current ch == 63
-//   // {
-//   //  current_ch = 0; 
-//   // }
-// }
+  //Reset channel tracker only after last channel is written to 
+  if (current_ch == (NUM_OF_CH - 1))   // if current ch == 63
+  {
+    current_ch = 0; 
+  }
+}
 
 /* Main function for mbed platform */ 
 void mbed_new_main(void )
@@ -94,23 +103,14 @@ void mbed_new_main(void )
   float timeout_us = ( (1 / tim_frq) * 1e6 );   // period = 1.67ms
   
   // Point hardware timer to a function once timeout (1,6666.6 us) is reached 
-  //tim.attach_us( callback(timerISR, &eeg_bus, &mux_bits) , timeout_us); 
+  tim.attach_us( &timerISR, timeout_us); 
   
   // Main loop for mbed platform 
   while(1) 
   {
-    // Cycles for how number of channels which also corresponds to data being written to bus
-    for (int ch = 0;  ch < NUM_OF_CH; ch++)
-    {
-      // Cycles for number of bits to send (i.e. 8 bits)
-      // Write to one byte to a GPIO pin and switch to next one in the bus
-      // e.g. Bit 0 is written to pin 0 in the bus (array of pins) and so on...
-      for (int bit_num = 0; bit_num < BYTE_SIZE; bit_num++) 
-      {
-        digitalWrite(eeg_bus[bit_num], bitRead(mux_bits[ch], bit_num));
-      }
-    }
-  }
+    
+
+  } // end while loop
 
 }
 
@@ -118,13 +118,14 @@ void mbed_new_main(void )
  * Results:
  * - Timer interrupt rate @ 609.7 Hz
  * - Array ('sequence') verification = done!
- * - Writing via Arduino library frequencies
- *    - D9: 2.52 us or 3.96 MHz
- *    - D8: 5.40 us or 1.85 MHz
- *    - D7: 10.25 us or 97.6 KHz
- *    - D6: 21.39 us or 46.8 KHz
- *    - D5: 41.00 us or 24.4 KHz
- *    - D4: 83.52 us or 12.0 KHz
+ * - Using the timer interrupt: Each pin frequency
+ *    - D9: 3.33 ms us or 300 Hz              
+ *    - D8: 6.66 ms or 150 Hz               
+ *    - D7: 13.05 ms or 75 Hz
+ *    - D6: 26.10 ms or 38.32 Hz
+ *
+ *    - D5: 51.64 ms or 19.36 Hz
+ *    - D4: 104.9 ms or 9.53 Hz
  *    - D3: 0 Hz (bit not needed)
  *    - D2: 0 Hz (bit not needed)
  */
