@@ -1,6 +1,6 @@
 /*
  * Basic ADC -> DAC test on the Portenta Board
- *   - 16 bit resolution
+ *   - 12 bit resolution
  *   - Using a function generator for input to ADC
  *   - Has AREF pin connected to 3.3V
  *
