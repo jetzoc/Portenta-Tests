@@ -71,6 +71,9 @@ void setup() {
 
   // Set up ADC input 
   pinMode(ADC_IN, INPUT); 
+
+  // Timing pin output 
+  pinMode(0, OUTPUT); // time the ISR
   
 }
 
@@ -87,25 +90,23 @@ void loop() {
 /** Timer ISR **/ 
  void timerISR(void )
  {
-  // Cycles for number of bits to send (i.e. 8 bits)
-  // Write to one byte to a GPIO pin and switch to next one in the bus
-  // e.g. Bit 0 is written to pin 0 in the bus (array of pins) and so on...
-  for (int bit_num = 0; bit_num < BYTE_SIZE; bit_num++) 
-  {
-    digitalWrite(eeg_bus[bit_num], bitRead(mux_bits[current_ch], bit_num));
-  }
+   digitalWrite(0, HIGH); 
 
-  // Sample ADC now
-  adc_samples[current_ch] = digitalRead(ADC_IN); 
+    // Cycles for number of channels to read
+    for (current_ch = 0; current_ch < NUM_OF_CH; current_ch++) 
+    {
+      // Cycles for number of bits to send (i.e. 8 bits)
+      // Write to one byte to a GPIO pin and switch to next one in the bus
+      // e.g. Bit 0 is written to pin 0 in the bus (array of pins) and so on...
+      for (int bit_num = 0; bit_num < BYTE_SIZE; bit_num++) 
+      {
+        digitalWrite(eeg_bus[bit_num], bitRead(mux_bits[current_ch], bit_num));
+      }
 
-  // Increment for next time
-  current_ch++;
-  
-  // Reset channel tracker only after last channel is written to 
-  if (current_ch == (NUM_OF_CH - 1))   // if current ch == 63
-  {
-    current_ch = 0; 
-  }
+      // Sample ADC now
+      adc_samples[current_ch] = digitalRead(ADC_IN); 
+
+    }
 
 }
 
@@ -131,8 +132,8 @@ void mbed_new_main(void )
   // Main loop for mbed platform 
   while(1) 
   {
-    
-
+    digitalWrite(0, LOW); 
+   
   } // end while loop
 
 }
@@ -140,16 +141,18 @@ void mbed_new_main(void )
 
 /**************************************************
  * Results:
- * - Timer interrupt rate @ 609.7 Hz
- * - Array ('sequence') verification = done!
- * - Using the timer interrupt: Each pin frequency
- *    - D9: 3.33 ms us or 300 Hz              
- *    - D8: 6.66 ms or 150 Hz               
- *    - D7: 13.05 ms or 75 Hz
- *    - D6: 26.10 ms or 38.32 Hz
+ * - Timer interrupt rate @ 600 Hz
  *
- *    - D5: 51.64 ms or 19.36 Hz
- *    - D4: 104.9 ms or 9.53 Hz
+ * - Using the timer interrupt: Each pin frequency (bit 7 - 0)
+ *    - D9: 19,189 Hz         
+ *    - D8: 9,609 Hz               
+ *    - D7: 4,804 Hz
+ *    - D6: 2,401 Hz
+ *
+ *    - D5: 1,201 Hz
+ *    - D4: 600 Hz
  *    - D3: 0 Hz (bit not needed)
- *    - D2: 0 Hz (bit not needed)
+ *    - D2: 0 Hz (bit not needed) 
+ *
+ * - ISR timing: 100 us
  ************************************************/
